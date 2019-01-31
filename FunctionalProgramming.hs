@@ -75,7 +75,14 @@ asInt_either = loop 0
 concat' :: [[a]] -> [a]
 concat' = foldr (++) []
 
---takeWhile
+takeWhile' :: (a -> Bool) -> [a] -> [a]
+takeWhile' _ [] = []
+takeWhile' f (h:t)
+    | f h = h: takeWhile' f t
+    | otherwise = []
+
+takeWhile'' :: (a -> Bool) -> [a] -> [a]
+takeWhile'' f = foldr (\x acc -> if f x then x:acc else acc ) []
 
 groupBy' :: (a -> a -> Bool) -> [a] -> [[a]]
 groupBy' pred input = foldl foldFunc [] input
@@ -84,5 +91,17 @@ groupBy' pred input = foldl foldFunc [] input
             | pred (head(last acc)) elem = (init acc) ++ [(last acc ++ [elem])]
             | otherwise = acc ++ [[elem]]
 
+any' :: (a -> Bool) -> [a] -> Bool
+any' f = foldl (\acc x -> (acc || f x)) False
+
+words' :: String -> [String]
+words' s = foldl f [] (reverse.dropWhile (== ' ').reverse $ s)
+    where f [] ' ' = []
+          f acc ' ' = acc ++ [[]]
+          f [] x = [[x]]
+          f acc x = init acc ++ [last acc ++ [x]]
+
+unlines' :: [String] -> String
+unlines' = foldl (\x acc -> x ++ "\n" ++acc) []
 
 
