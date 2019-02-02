@@ -63,11 +63,6 @@ series open close item = enclose open close . fsep . punctuate (char ',') . map 
 fsep :: [Doc] -> Doc
 fsep xs = undefined
 
-punctuate :: Doc -> [Doc] -> [Doc]
-punctuate p [] = []
-punctuate p [d] = [d]
-punctuate p (d:ds) = (d <|> p) : punctuate p ds
-
 renderJValue (JArray ary) = series '[' ']' renderJValue ary
 renderJValue (JObject obj) = series '{' '}' field obj
     where field (name, val) = string name <|> text ": " <|> renderJValue val
