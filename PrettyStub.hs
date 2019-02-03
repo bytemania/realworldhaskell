@@ -1,5 +1,7 @@
 module PrettyStub where
 
+{-# LANGUAGE TypeSynonymInstances #-}
+
 import Data.Bits
 import Data.Char
 import Numeric
@@ -66,6 +68,46 @@ fsep xs = undefined
 renderJValue (JArray ary) = series '[' ']' renderJValue ary
 renderJValue (JObject obj) = series '{' '}' field obj
     where field (name, val) = string name <|> text ": " <|> renderJValue val
+
+type JSONError = String
+
+class JSON a where
+    toJValue :: a -> JValue
+    fromJValue :: JValue -> Either JSONError a
+
+instance JSON JValue where
+    toJValue = id
+    fromJValue = Right
+
+instance JSON Bool where
+    toJValue = JBool
+    fromJValue (JBool b) = Right b
+    fromJValue _ = Left "not a JSON boolean"
+
+doubleToJValue :: (Double -> a) -> JValue -> Either JSONError a
+doubleToJValue f (JNumber v) = Right (f v)
+doubleToJValue _ _ = Left "Not a JSON number"
+
+instance JSON Int where
+    toJValue = JNumber . realToFrac
+    fromJValue = doubleToJValue round
+
+instance JSON Integer where
+    toJValue = JNumber . realToFrac
+    fromJValue = doubleToJValue round
+
+instance JSON Double where
+    toJValue = JNumber
+    fromJValue = doubleToJValue
+
+instance (JSON a) => JSON [a] where
+    toJValue = undefined
+    fromJValue = undefined
+
+instance (JSON a) => JSON [a] where
+    toJValue = undefined
+    fromJValue = undefined
+
 
 
 
