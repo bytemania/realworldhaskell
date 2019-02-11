@@ -1,6 +1,8 @@
 module FoldDir where
 
 import System.FilePath ((</>))
+import System.FilePath
+import Data.Char
 
 import ControlledVisit
 
