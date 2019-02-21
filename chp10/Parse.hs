@@ -129,4 +129,12 @@ parseBytes n = getState ==> \st ->
                   assert (L.length h == n') "end of input" ==>&
                   identity h
 
+instance Applicative Parse where
+    pure = identity
+
+instance Monad Parse where
+    return = identity
+    (>>=) = (==>)
+    fail = bail
+
 
