@@ -1,4 +1,4 @@
-module CSV2 where
+module Csv2 where
 
 import Text.ParserCombinators.Parsec
 
@@ -9,4 +9,7 @@ eol = char '\n'
 
 parseCSV :: String -> Either ParseError [[String]]
 parseCSV input = parse csvFile "(unknown)" input
+
+
+
 
